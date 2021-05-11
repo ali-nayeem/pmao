@@ -1,0 +1,9 @@
+.DS_Store
+*.pyc
+PASTA.egg-info/
+build/
+bin/
+pasta/test/runPastaTest*
+*.swp
+#data/
+.vscode/
