@@ -37,7 +37,8 @@ from pasta.tools import *
 from pasta.treeholder import read_and_encode_splits,\
     generate_tree_with_splits_from_tree
 from pasta.utility import IndentedHelpFormatterWithNL
-
+from util.transformscore import TransformScore
+import pasta
 
 _RunningJobs = None
 
@@ -334,6 +335,8 @@ def finish_pasta_execution(pasta_team,
             _RunningJobs = job
             jobq.put(job)
             score, starting_tree_str = job.get_results()
+            man_weights = {'w_simg':options.w_simg, 'w_simng':options.w_simng, 'w_sp':options.w_sp, 'w_gap':options.w_gap, 'w_ml':options.w_ml}
+            score = TransformScore(multilocus_dataset, score, man_weights).execute() # MAN: need to transform score (ml) to our composite 5 objective score: simg, simng, sp, gap, ml
             _RunningJobs = None
             alignment_as_tmp_filename_to_report = pasta_products.get_abs_path_for_iter_output("initialsearch", TEMP_SEQ_ALIGNMENT_TAG, allow_existing=True)
             tree_as_tmp_filename_to_report = pasta_products.get_abs_path_for_iter_output("initialsearch", TEMP_TREE_TAG, allow_existing=True)
@@ -346,12 +349,12 @@ def finish_pasta_execution(pasta_team,
             pasta_config_dict['keep_iteration_temporaries'] = True
             if options.keepalignmenttemps:
                 pasta_config_dict['keep_realignment_temporaries'] = True
-
+        pasta_config_dict['man_weights'] = man_weights
         job = PastaJob(multilocus_dataset=multilocus_dataset,
                         pasta_team=pasta_team,
                         name=options.job,
                         status_messages=MESSENGER.send_info,
-                        score=score,
+                        score=score, # MAN: to init best_score
                         **pasta_config_dict)
         if starting_tree is not None:            
             job.tree = generate_tree_with_splits_from_tree(starting_tree, force_fully_resolved = True)
@@ -613,10 +616,29 @@ def pasta_main(argv=sys.argv):
     command_line_group.add_to_optparser(parser)
     sate_group = user_config.get('sate')
     sate_group.add_to_optparser(parser)
-    
+
+    group = optparse.OptionGroup(parser, "SATe tools extra options")
+    group.add_option('--simg', type='float', dest='w_simg', help='weight for SimG')
+    group.add_option('--simng', type='float', dest='w_simng', help='weight for SimNG')
+    group.add_option('--osp', type='float', dest='w_sp', help='weight for SP')
+    group.add_option('--gap', type='float', dest='w_gap', help='weight for Gap')
+    group.add_option('--ml', type='float', dest='w_ml', help='weight for ML')
+    parser.add_option_group(group)
+
     # This is just to read the configurations so that auto value could be set
     parse_user_options(argv, parser, user_config, command_line_group)
     
+    w_simg = pasta.usersettingclasses.StringUserSetting('w_simg', -1)
+    user_config.commandline.add_option('w_simg', w_simg)
+    w_simng = pasta.usersettingclasses.StringUserSetting('w_simng', -1)
+    user_config.commandline.add_option('w_simng', w_simng)
+    w_sp = pasta.usersettingclasses.StringUserSetting('w_sp', -1)
+    user_config.commandline.add_option('w_sp', w_sp)
+    w_gap = pasta.usersettingclasses.StringUserSetting('w_gap', -1)
+    user_config.commandline.add_option('w_gap', w_gap)
+    w_ml = pasta.usersettingclasses.StringUserSetting('w_ml', -1)
+    user_config.commandline.add_option('w_ml', w_ml)
+
     # Read the input file, this is needed for auto values
     user_config.read_seq_filepaths(src=user_config.commandline.input,
             multilocus=user_config.commandline.multilocus)

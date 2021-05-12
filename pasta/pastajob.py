@@ -40,6 +40,7 @@ from pasta.utility import record_timestamp
 from pasta.scheduler import jobq
 from pasta.filemgr import  TempFS
 from pasta import TEMP_SEQ_ALIGNMENT_TAG, TEMP_TREE_TAG, MESSENGER, TEMP_SHRUNK_ALIGNMENT_TAG, TEMP_SHRUNK_TREE_TAG
+from util.transformscore import TransformScore
 
 # uym2 added: for minimum subsets tree
 from pasta.Kruskal_MST import build_groups_MST
@@ -139,7 +140,7 @@ class PastaJob (TreeHolder):
         self.pasta_team = pasta_team
         self.tree = tree
         self.score = kwargs.get('score', None)
-        self.best_score = None
+        self.best_score = None #MAN: Initializing best_score which is a max. score
 
         self._tree_build_job = None
         self._pasta_decomp_job = None
@@ -160,6 +161,7 @@ class PastaJob (TreeHolder):
 
         self._reset_current_run_settings()
         self.killed = False
+        self.man_weights = kwargs.get('man_weights')
 
     def _reset_current_run_settings(self):
         self.start_time = None
@@ -585,6 +587,7 @@ WARNING: you have specified a max subproblem ({0}) that is equal to or greater
                 self.tree_build_job = tbj
                 jobq.put(tbj)
                 new_score, new_tree_str = tbj.get_results()
+                new_score = TransformScore(new_multilocus_dataset, new_score, self.man_weights).execute() # MAN: need to transform new_score (ml) to our composite 5 objective score: simg, simng, sp, gap, ml
                 self.tree_build_job = None
                 del tbj
                 if self.killed:
@@ -596,7 +599,7 @@ WARNING: you have specified a max subproblem ({0}) that is equal to or greater
                                 
                 _LOG.debug("Tree obtained. Checking for acceptance.")
 
-                this_iter_score_improved = ( self.best_score is None ) or ( new_score > self.best_score )
+                this_iter_score_improved = ( self.best_score is None ) or ( new_score > self.best_score ) #MAN: maximization
 
                 accept_iteration =  ( this_iter_score_improved or 
                                       self._get_accept_mode(new_score=new_score, break_strategy_index=break_strategy_index) == AcceptMode.BLIND_MODE )
