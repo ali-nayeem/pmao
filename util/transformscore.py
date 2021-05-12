@@ -183,7 +183,7 @@ class TransformScore:
 
 
     def execute(self):
-        return self.ml_score
+        #return self.ml_score
 
         #calculate simg and simng using a method
         #calculate gap => min.

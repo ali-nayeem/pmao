@@ -625,19 +625,20 @@ def pasta_main(argv=sys.argv):
     group.add_option('--ml', type='float', dest='w_ml', help='weight for ML')
     parser.add_option_group(group)
 
+    w_simg = pasta.usersettingclasses. FloatUserSetting('w_simg', -1)
+    user_config.commandline.add_option('w_simg', w_simg)
+    w_simng = pasta.usersettingclasses.FloatUserSetting('w_simng', -1)
+    user_config.commandline.add_option('w_simng', w_simng)
+    w_sp = pasta.usersettingclasses.FloatUserSetting('w_sp', -1)
+    user_config.commandline.add_option('w_sp', w_sp)
+    w_gap = pasta.usersettingclasses.FloatUserSetting('w_gap', -1)
+    user_config.commandline.add_option('w_gap', w_gap)
+    w_ml = pasta.usersettingclasses.FloatUserSetting('w_ml', -1)
+    user_config.commandline.add_option('w_ml', w_ml)
     # This is just to read the configurations so that auto value could be set
     parse_user_options(argv, parser, user_config, command_line_group)
     
-    w_simg = pasta.usersettingclasses.StringUserSetting('w_simg', -1)
-    user_config.commandline.add_option('w_simg', w_simg)
-    w_simng = pasta.usersettingclasses.StringUserSetting('w_simng', -1)
-    user_config.commandline.add_option('w_simng', w_simng)
-    w_sp = pasta.usersettingclasses.StringUserSetting('w_sp', -1)
-    user_config.commandline.add_option('w_sp', w_sp)
-    w_gap = pasta.usersettingclasses.StringUserSetting('w_gap', -1)
-    user_config.commandline.add_option('w_gap', w_gap)
-    w_ml = pasta.usersettingclasses.StringUserSetting('w_ml', -1)
-    user_config.commandline.add_option('w_ml', w_ml)
+   
 
     # Read the input file, this is needed for auto values
     user_config.read_seq_filepaths(src=user_config.commandline.input,
