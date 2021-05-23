@@ -183,6 +183,9 @@ class TransformScore:
 
 
     def execute(self):
+        if self.man_weights['w_simg'] == -1.0 and self.man_weights['w_simng'] == -1.0 and \
+            self.man_weights['w_sp'] == -1.0 and self.man_weights['w_gap'] == -1.0 and self.man_weights['w_ml']:
+            return self.ml_score
         #return self.ml_score
 
         #calculate simg and simng using a method
