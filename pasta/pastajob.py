@@ -457,7 +457,7 @@ class PastaJob (TreeHolder):
 
         self.start_time = time.time()
         self.last_improvement_time = self.start_time
-
+        self.last_iteration_improved = True
         num_non_update_iter = 0
 
         configuration = self.configuration()
@@ -516,6 +516,7 @@ WARNING: you have specified a max subproblem ({0}) that is equal to or greater
                                          tmp_base_dir=curr_tmp_dir_par,
                                          reset_recursion_index=True,
                                          skip_merge=self.pastamerge,
+                                         last_iteration_imrproved=self.last_iteration_improved,
                                          **configuration)
                 self.pasta_aligner_job = aligner
                 aligner.launch_alignment(break_strategy=break_strategy,
@@ -600,7 +601,7 @@ WARNING: you have specified a max subproblem ({0}) that is equal to or greater
                 _LOG.debug("Tree obtained. Checking for acceptance.")
 
                 this_iter_score_improved = ( self.best_score is None ) or ( new_score > self.best_score ) #MAN: maximization
-
+                self.last_iteration_improved = this_iter_score_improved
                 accept_iteration =  ( this_iter_score_improved or 
                                       self._get_accept_mode(new_score=new_score, break_strategy_index=break_strategy_index) == AcceptMode.BLIND_MODE )
 

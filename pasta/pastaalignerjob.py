@@ -35,7 +35,7 @@ from pasta.scheduler import TickableJob
 from pasta.new_decomposition import midpoint_bisect, min_cluster_size_bisect
 
 # uym2 modified: add min_size option
-def bisect_tree(tree, breaking_edge_style='mincluster',min_size=0,max_size=None,max_diam=None):
+def bisect_tree(tree, breaking_edge_style='mincluster',min_size=0,max_size=None,max_diam=None, last_iteration_improved=True):
     """Partition 'tree' into two parts
     """
     _LOG.debug("bisecting tree...")
@@ -53,7 +53,7 @@ def bisect_tree(tree, breaking_edge_style='mincluster',min_size=0,max_size=None,
     # uym2: min_cluster decomposition
     if breaking_edge_style == 'mincluster':
         _LOG.debug("breaking using min-cluster strategy")
-        t1,t2 = min_cluster_size_bisect(tree._tree,max_size)
+        t1,t2 = min_cluster_size_bisect(tree._tree,max_size, last_iteration_improved)
         tree1 = PhylogeneticTree(t1) if t1 else None
         tree2 = PhylogeneticTree(t2) if t2 else None
         return tree1,tree2
@@ -96,6 +96,7 @@ class PASTAAlignerJob(TreeHolder, TickableJob):
                 tmp_dir_par=None,
                 reset_recursion_index=False,
                 skip_merge = False,
+                last_iteration_imrproved=True,
                 **kwargs):
         self._job_lock = Lock()
         self._merge_queued_event = new_merge_event()
@@ -124,6 +125,7 @@ class PASTAAlignerJob(TreeHolder, TickableJob):
         if reset_recursion_index:
             self.__class__.RECURSION_INDEX = 0
         self.finished = False
+        self.last_iteration_improved = last_iteration_imrproved
 
     def configuration(self):
         d = {}
@@ -396,7 +398,7 @@ class PASTAAlignerJob(TreeHolder, TickableJob):
         _LOG.debug("tree before bipartition by %s = %s ..." % (option, self.tree.compose_newick()[0:200]))
 
 # uym2 modified: add min_size option
-        tree1, tree2 = bisect_tree(self.tree, breaking_edge_style=option,min_size=self.min_subproblem_size,max_size=self.max_subproblem_size)
+        tree1, tree2 = bisect_tree(self.tree, breaking_edge_style=option,min_size=self.min_subproblem_size,max_size=self.max_subproblem_size, last_iteration_improved=self.last_iteration_improved)
         if tree1 is None or tree2 is None:
             return [None,None]
         assert tree1.n_leaves > 0

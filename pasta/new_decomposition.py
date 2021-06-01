@@ -11,10 +11,32 @@ except:
 from sys import argv
 
 from pasta import get_logger
+import random
 
 _LOG = get_logger(__name__)
 
-def min_cluster_size_bisect(a_tree,max_size):
+def weighted_random_choice(choices):
+    # max_v = max(choices.values())
+    # to_remove = []
+    # for key, value in choices.items():
+    #     if value < max_v*0.5:
+    #         to_remove.append(key)
+    #         #choices.pop(key)
+    # for k in to_remove:
+    #     choices.pop(k)
+    #for key, value in sorted(choices.items(), key=lambda x: x[1])
+
+    total = sum(choices.values())
+    pick = random.uniform(0, total)
+    current = 0
+    for key, value in choices.items():
+        current += value
+        if current > pick:
+            return key
+
+def min_cluster_size_bisect(a_tree,max_size, last_iteration_improved):
+    node_nleaf_count = {}
+    child_to_node = {}
     for node in a_tree.postorder_node_iter():
         if node.is_leaf():
             node.nleaf = 1
@@ -27,10 +49,18 @@ def min_cluster_size_bisect(a_tree,max_size):
                    if ch.nleaf > max_nleaf:
                        max_nleaf = ch.nleaf
                        max_child = ch
+                       node_nleaf_count[max_child] = max_nleaf
+                       child_to_node[max_child] = node
         if node.nleaf > max_size:
-            node.remove_child(max_child)
-            t1 = Tree(seed_node = max_child)
-            return a_tree,t1
+            if last_iteration_improved == True:
+                node.remove_child(max_child)
+                t1 = Tree(seed_node = max_child)
+                return a_tree,t1
+            else:
+                selected_child = weighted_random_choice(node_nleaf_count)
+                child_to_node[selected_child].remove_child(selected_child)
+                t1 = Tree(seed_node = selected_child)
+                return a_tree,t1
     return a_tree,None            
 
 def min_cluster_diam_bisect(a_tree,max_diam):
