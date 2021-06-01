@@ -85,7 +85,7 @@ def get_auto_defaults_from_summary_stats(datatype, ntax_nchar_tuple_list, total_
         'aligner' : 'mafft',
         'merger' : 'opal',
         'break_strategy' : 'mincluster',
-        'move_to_blind_on_worse_score' : True,
+        'move_to_blind_on_worse_score' : False,
         'start_tree_search_from_current' : True,
         'after_blind_iter_without_imp_limit' : -1,
         'time_limit' : -1,
