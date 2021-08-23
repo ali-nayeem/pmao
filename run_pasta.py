@@ -22,6 +22,8 @@
 # Jiaye Yu and Mark Holder, University of Kansas
 
 if __name__ == "__main__":
+    #import random
+    #random.seed(0)
     import os
     import sys
     import pasta
