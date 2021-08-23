@@ -6,11 +6,12 @@ Here is the original [PASTA Tutorial](pasta-doc/pasta-tutorial.md)
 ## Application-aware objectives in PMAO for phylogeny estimation
 
 Currently PMAO simulatneosly uses the following five objectives as its optimization criteria:
-1. Maximize maximum likihood score (ML)
-2. Maximize similarity for columns containing gaps (SIMG)
-3. Maximize similarity for columns containing no gaps (SIMNG)
-4. Maximize sum-of-pairs (SOP)
-5. Minimize number of gaps (GAP)
+1. Maximize similarity for columns containing gaps (SIMG)
+2. Maximize similarity for columns containing no gaps (SIMNG)
+3. Maximize sum-of-pairs (SOP)
+4. Minimize number of gaps (GAP)
+5. Maximize maximum likihood score (ML)
+
 
 More objectives can be added to this framework.
 
