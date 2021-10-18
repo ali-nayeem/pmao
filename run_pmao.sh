@@ -55,7 +55,7 @@ while read w1 w2 w3 w4 w5
 do
     echo "Running PMAO for $i-th weight vector=$w1, $w2, $w3, $w4, $w5"
     #generate alignment and tree using many-objective application-aware PASTA
-    $pasta_python run_pasta.py -i $input_seq -d protein -o $out_dir/$dataset -j $i --simg=$w1 --simng=$w2 --osp=$w3 --gap=$w4 --ml=$w5 --iter-limit=$iter_limit --no-return-final-tree-and-alignment --move-to-blind-on-worse-score
+    python run_pasta.py -i $input_seq -d protein -o $out_dir -j $i --simg=$w1 --simng=$w2 --osp=$w3 --gap=$w4 --ml=$w5 --iter-limit=$iter_limit --no-return-final-tree-and-alignment --move-to-blind-on-worse-score
     i=$[i+1]
     #exit
 done < $INPUT
