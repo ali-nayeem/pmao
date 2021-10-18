@@ -89,32 +89,13 @@ Use `git clone https://github.com/koditaraszka/pasta-databases` or download dire
 To run PMAO using the command-line:
 
 ```bash
-python run_pasta.py -i input_fasta [-t starting_tree] 
+run_pmao.sh -i=input_fasta -o=output_directory -t=pasta_iterations -w=weights_csv 
 ```
-
-
-PASTA by default picks the appropriate configurations automatically for you. 
-The starting tree is optional. If not provided, PASTA estimates a starting tree. 
-
-Run
-
-```bash
-python run_pasta.py --help
-``` 
-
-to see PASTA's various options and descriptions of how they work. 
-
-
-
-Options
-------
-PASTA estimates alignments and maximum likelihood (ML) trees from unaligned sequences using an iterative approach. In each iteration, 
-it first estimates a multiple sequence alignment and then a ML tree is estimated on (a masked version of) the alignment. 
 
 
 Output
 -------
-PASTA outputs an alignment and a tree, in addition to a host of other files. These various output files are described in more detail in our [tutorial](pasta-doc/pasta-tutorial.md#step-2-inspecting-the-output-of-pasta). Note that the support values on the PASTA output tree are local SH-like support values computed by FastTree, and not bootstrap support values. To get a more reliable measure of support, please use the bootstrapping procedure, applied to the final PASTA alignments (you can use RAxML for this purpose). 
+PASTA outputs an alignment and a tree for each weight vector provided in the CSV file
 
 
 
