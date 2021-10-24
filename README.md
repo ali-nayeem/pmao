@@ -24,7 +24,6 @@ You need to have:
 
 - [Python](https://www.python.org) (version 2.7 or later, including python 3)
 - [Dendropy](http://packages.python.org/DendroPy/) (but the setup script should automatically install dendropy for you if you don't have it)  
-- [Java](https://www.java.com) (only required for using OPAL)
 
 **Installation steps**:
 
@@ -63,14 +62,9 @@ and decompress them in your target directory (e.g. `pasta-code`).
 You need to rename these directories and remove the `-master` part.
 	* Those with 32-bit Linux machines need to be aware that the master branch has 64-bit binaries. 32-bit binaries are provided in the `32bit` branch of `sate-tools-linux` git project (so download [this zip file](https://github.com/smirarab/sate-tools-linux/archive/32bit.zip) instead). 
 
-3. B. (Optional) Only if you want to use MAFFT-Homologs within PASTA:
-`cd sate-tools-linux` or `cd sate-tools-mac`
-Use `git clone https://github.com/koditaraszka/pasta-databases` or download directly at `https://github.com/koditaraszka/pasta-databases.git`
-	* Be sure to leave this directory `cd ..` before starting the next step
+3. `cd pmao` 
 
-4. `cd pmao` 
-
-5. Then run:
+4. Then run:
 
 	``` bash
 	 sudo python setup.py develop 
